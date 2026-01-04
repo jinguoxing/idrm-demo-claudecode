@@ -1,0 +1,52 @@
+syntax = "v1"
+
+import "../base.api"
+
+type (
+	// RegisterReq 注册请求
+	RegisterReq {
+		Phone    string `json:"phone" validate:"required_without=Email,phone"`
+		Email    string `json:"email" validate:"required_without=Phone,email"`
+		Password string `json:"password" validate:"required,min=8,max=32"`
+	}
+
+	// RegisterResp 注册响应
+	RegisterResp {
+		Id    string `json:"id"`
+		Phone string `json:"phone"`
+		Email string `json:"email"`
+	}
+
+	// LoginReq 登录请求
+	LoginReq {
+		Account  string `json:"account" validate:"required"`  // 手机号或邮箱
+		Password string `json:"password" validate:"required"`
+	}
+
+	// LoginResp 登录响应
+	LoginResp {
+		AccessToken string   `json:"access_token"`
+		ExpiresIn   int64    `json:"expires_in"`  // 秒
+		TokenType   string   `json:"token_type"`  // Bearer
+		UserInfo    UserInfo `json:"user_info"`
+	}
+
+	// UserInfo 用户信息
+	UserInfo {
+		Id    string `json:"id"`
+		Phone string `json:"phone"`
+		Email string `json:"email"`
+	}
+)
+
+@server(
+	prefix: /api/v1/auth
+	group: user
+)
+service IdrmDemoClaudecodeApi {
+	@handler Register
+	post /register (RegisterReq) returns (RegisterResp)
+
+	@handler Login
+	post /login (LoginReq) returns (LoginResp)
+}
