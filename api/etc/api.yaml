@@ -1,0 +1,57 @@
+Name: idrm-demo-claudecode-api
+Host: 0.0.0.0
+Port: 8888
+
+# Telemetry 配置
+Telemetry:
+  ServiceName: idrm-demo-claudecode-api
+  ServiceVersion: 1.0.0
+  Environment: dev
+  
+  Log:
+    Level: info
+    Mode: file
+    Path: logs
+    KeepDays: 7
+    RemoteEnabled: false
+    RemoteUrl: http://log-collector:8080/api/logs
+    RemoteBatch: 100
+    RemoteTimeout: 5
+    
+  Trace:
+    Enabled: false
+    Endpoint: localhost:4317
+    Sampler: 1.0
+    Batcher: otlp
+    
+  Audit:
+    Enabled: false
+    Url: http://audit-service:8080/api/audit
+    Buffer: 100
+
+# 数据库配置
+DB:
+  Default:
+    Host: localhost
+    Port: 3306
+    Database: idrm
+    Username: root
+    Password: 123456
+    Charset: utf8mb4
+    # 连接池配置
+    MaxIdleConns: 10
+    MaxOpenConns: 100
+    ConnMaxLifetime: 3600
+    ConnMaxIdleTime: 600
+    # 日志配置
+    LogLevel: warn
+    SlowThreshold: 200
+    SkipDefaultTxn: true
+    PrepareStmt: true
+    SingularTable: true
+    DisableForeignKey: true
+
+# 认证配置
+Auth:
+  AccessSecret: 94dddffea62801cb4d60d45b80a8b745c59d742716faa96ae03cbd12d436263c
+  AccessExpire: 7200

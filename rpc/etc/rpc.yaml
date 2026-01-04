@@ -1,0 +1,31 @@
+Name: idrm-demo-claudecode-rpc
+Host: 0.0.0.0
+Port: 9999
+
+# 日志配置
+Log:
+  ServiceName: idrm-demo-claudecode-rpc
+  Mode: console
+  Level: info
+
+# 链路追踪
+Telemetry:
+  Name: idrm-demo-claudecode-rpc
+  Endpoint: ""
+  Sampler: 1.0
+  Batcher: jaeger
+
+# 数据库配置
+DB:
+  Default:
+    Host: localhost
+    Port: 3306
+    Database: idrm
+    Username: root
+    Password: 123456
+    Charset: utf8mb4
+    MaxIdleConns: 10
+    MaxOpenConns: 100
+    ConnMaxLifetime: 3600
+    LogLevel: warn
+    SlowThreshold: 200
