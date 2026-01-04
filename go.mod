@@ -7,6 +7,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/zeromicro/go-zero v1.9.4
 	golang.org/x/crypto v0.46.0
+	gorm.io/driver/mysql v1.6.0
 	gorm.io/gorm v1.31.1
 )
 

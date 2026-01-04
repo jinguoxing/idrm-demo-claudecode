@@ -6,6 +6,7 @@ package user
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -61,11 +62,10 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	}
 
 	// 6. 更新最后登录时间
-	// TODO: 从 ServiceContext 获取 UserModel
-	// err = l.svcCtx.UserModel.UpdateLastLogin(l.ctx, userEntity.Id)
-	// if err != nil {
-	// 	logx.Errorf("更新最后登录时间失败: %v", err)
-	// }
+	err = l.svcCtx.UserModel.UpdateLastLogin(l.ctx, userEntity.Id)
+	if err != nil {
+		logx.Errorf("更新最后登录时间失败: %v", err)
+	}
 
 	logx.Infof("用户登录成功: id=%s, account=%s", userEntity.Id, req.Account)
 
@@ -84,24 +84,23 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 
 // findUser 查找用户（手机号或邮箱）
 func (l *LoginLogic) findUser(account string) (*user.User, error) {
-	// TODO: 实现 Model 层后查询用户
 	// 首先尝试手机号
-	// u, err := l.svcCtx.UserModel.FindByPhone(l.ctx, account)
-	// if err == nil {
-	// 	return u, nil
-	// }
-	// if err != user.ErrUserNotFound {
-	// 	return nil, err
-	// }
+	u, err := l.svcCtx.UserModel.FindByPhone(l.ctx, account)
+	if err == nil {
+		return u, nil
+	}
+	if err != user.ErrUserNotFound {
+		return nil, err
+	}
 
 	// 然后尝试邮箱（小写）
-	// u, err = l.svcCtx.UserModel.FindByEmail(l.ctx, strings.ToLower(account))
-	// if err == nil {
-	// 	return u, nil
-	// }
-	// if err != user.ErrUserNotFound {
-	// 	return nil, err
-	// }
+	u, err = l.svcCtx.UserModel.FindByEmail(l.ctx, strings.ToLower(account))
+	if err == nil {
+		return u, nil
+	}
+	if err != user.ErrUserNotFound {
+		return nil, err
+	}
 
 	return nil, user.ErrUserNotFound
 }

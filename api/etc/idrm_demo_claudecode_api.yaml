@@ -1,3 +1,14 @@
 Name: IdrmDemoClaudecodeApi
 Host: 0.0.0.0
 Port: 8888
+
+# 数据库配置
+DB:
+  Host: mysql  # Docker 容器名称
+  Port: 3306
+  Database: idrm
+  Username: root
+  Password: "123456"
+  Charset: utf8mb4
+  MaxIdleConns: 10
+  MaxOpenConns: 100

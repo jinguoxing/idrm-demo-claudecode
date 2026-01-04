@@ -26,7 +26,7 @@ RUN apk --no-cache add ca-certificates tzdata
 
 # Copy binary from builder
 COPY --from=builder /app/server .
-COPY --from=builder /app/api/etc/api.yaml ./etc/
+COPY --from=builder /app/api/etc/idrm_demo_claudecode_api.yaml ./etc/api.yaml
 
 # Set timezone
 ENV TZ=Asia/Shanghai

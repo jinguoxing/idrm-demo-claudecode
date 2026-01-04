@@ -61,11 +61,10 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	}
 
 	// 5. 保存到数据库
-	// TODO: 从 ServiceContext 获取 UserModel
-	// _, err = l.svcCtx.UserModel.Insert(l.ctx, userEntity)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("创建用户失败: %w", err)
-	// }
+	_, err = l.svcCtx.UserModel.Insert(l.ctx, userEntity)
+	if err != nil {
+		return nil, fmt.Errorf("创建用户失败: %w", err)
+	}
 
 	logx.Infof("用户注册成功: id=%s, phone=%s, email=%s", userEntity.Id, userEntity.Phone, userEntity.Email)
 
@@ -108,16 +107,28 @@ func (l *RegisterLogic) validateRegisterReq(req *types.RegisterReq) error {
 
 // checkUniqueness 检查手机号和邮箱唯一性
 func (l *RegisterLogic) checkUniqueness(req *types.RegisterReq) error {
-	// TODO: 实现 Model 层后检查唯一性
-	// if req.Phone != "" {
-	// 	_, err := l.svcCtx.UserModel.FindByPhone(l.ctx, req.Phone)
-	// 	if err == nil {
-	// 		return errorx.NewWithCode(errorx.ErrCodeUserPhoneExists, "手机号已被注册")
-	// 	}
-	// 	if err != user.ErrUserNotFound {
-	// 		return err
-	// 	}
-	// }
+	// 检查手机号
+	if req.Phone != "" {
+		_, err := l.svcCtx.UserModel.FindByPhone(l.ctx, req.Phone)
+		if err == nil {
+			return fmt.Errorf("手机号已被注册")
+		}
+		if err != user.ErrUserNotFound {
+			return err
+		}
+	}
+
+	// 检查邮箱
+	if req.Email != "" {
+		_, err := l.svcCtx.UserModel.FindByEmail(l.ctx, strings.ToLower(req.Email))
+		if err == nil {
+			return fmt.Errorf("邮箱已被注册")
+		}
+		if err != user.ErrUserNotFound {
+			return err
+		}
+	}
+
 	return nil
 }
 
